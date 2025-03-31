@@ -6,10 +6,8 @@ terraform {
   }
 }
 
-provider "terrapwner" {}
-
 data "terrapwner_env_dump" "current" {}
 
-output "env" {
-  value = data.terrapwner_env_dump.current.vars["PWD"]
+output "response" {
+  value = data.terrapwner_env_dump.current.vars
 }

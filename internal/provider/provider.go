@@ -1,11 +1,10 @@
-// Copyright (c) HashiCorp, Inc.
-// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Datadog, Inc.
+// SPDX-License-Identifier: Apache-2.0
 
 package provider
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
@@ -16,85 +15,74 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Ensure ScaffoldingProvider satisfies various provider interfaces.
-var _ provider.Provider = &ScaffoldingProvider{}
-var _ provider.ProviderWithFunctions = &ScaffoldingProvider{}
-var _ provider.ProviderWithEphemeralResources = &ScaffoldingProvider{}
+// Ensure Terrapwner satisfies various provider interfaces.
+var _ provider.Provider = &Terrapwner{}
+var _ provider.ProviderWithFunctions = &Terrapwner{}
+var _ provider.ProviderWithEphemeralResources = &Terrapwner{}
 
-// ScaffoldingProvider defines the provider implementation.
-type ScaffoldingProvider struct {
+// Terrapwner defines the provider implementation.
+type Terrapwner struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// ScaffoldingProviderModel describes the provider data model.
-type ScaffoldingProviderModel struct {
-	Endpoint types.String `tfsdk:"endpoint"`
+// TerrapwnerProviderModel describes the provider data model.
+type TerrapwnerProviderModel struct {
+	FailOnError types.Bool `tfsdk:"fail_on_error"`
 }
 
-func (p *ScaffoldingProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "scaffolding"
+func (p *Terrapwner) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "terrapwner"
 	resp.Version = p.version
 }
 
-func (p *ScaffoldingProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+// Schema defines the provider-level schema for configuration data.
+func (p *Terrapwner) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "Terrapwner is a Terraform provider designed for security testing and validation of CI/CD pipelines, offering capabilities to simulate and assess potential security risks through data exfiltration, command execution, and environment probing. It provides a set of data sources that enable both red teamers to simulate pipeline abuse scenarios and blue teamers to validate their security controls and exfiltration risks in a controlled manner.",
 		Attributes: map[string]schema.Attribute{
-			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "Example provider attribute",
-				Optional:            true,
+			// TODO: Make this a global setting
+			"fail_on_error": schema.BoolAttribute{
+				Description: "Whether to fail on any error (download or execution). If false, the provider will continue with default values.",
+				Optional:    true,
 			},
 		},
 	}
 }
 
-func (p *ScaffoldingProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data ScaffoldingProviderModel
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	// Configuration values are now available.
-	// if data.Endpoint.IsNull() { /* ... */ }
-
-	// Example client configuration for data sources and resources
-	client := http.DefaultClient
-	resp.DataSourceData = client
-	resp.ResourceData = client
+func (p *Terrapwner) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 }
 
-func (p *ScaffoldingProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewExampleResource,
-	}
+func (p *Terrapwner) Resources(ctx context.Context) []func() resource.Resource {
+	return nil
 }
 
-func (p *ScaffoldingProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
-	return []func() ephemeral.EphemeralResource{
-		NewExampleEphemeralResource,
-	}
+func (p *Terrapwner) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
+	return nil
 }
 
-func (p *ScaffoldingProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+// DataSources defines the data sources implemented in the provider.
+func (p *Terrapwner) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewExampleDataSource,
+		NewTerrapwnerEnvDumpDataSource,
+		NewTerrapwnerRemoteExecDataSource,
+		NewTerrapwnerExfilDataSource,
+		NewTerrapwnerIdentityDataSource,
+		NewTerrapwnerLocalExecDataSource,
+		NewTerrapwnerNetworkProbeDataSource,
+		NewTerrapwnerTfstateDataSource,
 	}
 }
 
-func (p *ScaffoldingProvider) Functions(ctx context.Context) []func() function.Function {
-	return []func() function.Function{
-		NewExampleFunction,
-	}
+func (p *Terrapwner) Functions(ctx context.Context) []func() function.Function {
+	return nil
 }
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &ScaffoldingProvider{
+		return &Terrapwner{
 			version: version,
 		}
 	}
