@@ -22,7 +22,7 @@ const (
 	defaultCommandTimeout = 30 * time.Second
 )
 
-// Ensure the implementation satisfies the expected interfaces
+// Ensure the implementation satisfies the expected interfaces.
 var (
 	_ datasource.DataSource              = &TerrapwnerLocalExecDataSource{}
 	_ datasource.DataSourceWithConfigure = &TerrapwnerLocalExecDataSource{}

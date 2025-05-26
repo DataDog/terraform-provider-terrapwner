@@ -200,7 +200,7 @@ func (d *TerrapwnerIdentityDataSource) getAWSIdentity(ctx context.Context, data 
 	return nil
 }
 
-// determineCallerInfo extracts the caller type and name from an AWS ARN
+// determineCallerInfo extracts the caller type and name from an AWS ARN.
 func (d *TerrapwnerIdentityDataSource) determineCallerInfo(service, resourceType, resourceID string) (string, string, string) {
 	switch {
 	case service == "sts" && resourceType == "assumed-role":

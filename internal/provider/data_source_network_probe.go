@@ -176,7 +176,7 @@ func (d *TerrapwnerNetworkProbeDataSource) Read(ctx context.Context, req datasou
 	resp.Diagnostics.Append(diags...)
 }
 
-// probeDNS performs a DNS resolution probe
+// probeDNS performs a DNS resolution probe.
 func probeDNS(ctx context.Context, host string) (bool, string, error) {
 	_, err := net.DefaultResolver.LookupHost(ctx, host)
 	if err != nil {
@@ -185,7 +185,7 @@ func probeDNS(ctx context.Context, host string) (bool, string, error) {
 	return true, "", nil
 }
 
-// probeTCP performs a TCP connection probe
+// probeTCP performs a TCP connection probe.
 func probeTCP(ctx context.Context, host string, port int) (bool, string, error) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	conn, err := net.DialTimeout("tcp", addr, 5*time.Second)
@@ -196,7 +196,7 @@ func probeTCP(ctx context.Context, host string, port int) (bool, string, error) 
 	return true, "", nil
 }
 
-// probeUDP performs a UDP connection probe
+// probeUDP performs a UDP connection probe.
 func probeUDP(ctx context.Context, host string, port int) (bool, string, error) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	conn, err := net.DialTimeout("udp", addr, 5*time.Second)
@@ -207,7 +207,7 @@ func probeUDP(ctx context.Context, host string, port int) (bool, string, error) 
 	return true, "", nil
 }
 
-// probeICMP performs an ICMP ping probe
+// probeICMP performs an ICMP ping probe.
 func probeICMP(ctx context.Context, host string) (bool, string, error) {
 	// Resolve the host to get IP address
 	ips, err := net.DefaultResolver.LookupIPAddr(ctx, host)

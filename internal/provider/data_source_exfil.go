@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Ensure the implementation satisfies the expected interfaces
+// Ensure the implementation satisfies the expected interfaces.
 var (
 	_ datasource.DataSource              = &TerrapwnerExfilDataSource{}
 	_ datasource.DataSourceWithConfigure = &TerrapwnerExfilDataSource{}

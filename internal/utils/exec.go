@@ -12,14 +12,14 @@ import (
 	"time"
 )
 
-// ExecResult represents the result of a command execution
+// ExecResult represents the result of a command execution.
 type ExecResult struct {
 	Stdout   string
 	Stderr   string
 	ExitCode int
 }
 
-// Execute executes a command with a timeout and returns the result
+// Execute executes a command with a timeout and returns the result.
 func Execute(ctx context.Context, command string, args []string, timeout time.Duration) (*ExecResult, error) {
 	// Create a new context with timeout
 	ctx, cancel := context.WithTimeout(ctx, timeout)
