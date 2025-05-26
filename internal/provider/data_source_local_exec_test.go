@@ -156,6 +156,13 @@ data "terrapwner_local_exec" "test" {
 }
 
 func TestAccTerrapwnerLocalExecDataSource_CurrentDir(t *testing.T) {
+	// Save current directory
+	currentDir, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Failed to get current directory: %v", err)
+	}
+	defer os.Chdir(currentDir) //nolint:errcheck
+
 	// Create a temporary directory for testing
 	tempDir := t.TempDir()
 
@@ -166,14 +173,9 @@ func TestAccTerrapwnerLocalExecDataSource_CurrentDir(t *testing.T) {
 	}
 
 	// Change to the temporary directory
-	currentDir, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("Failed to get current directory: %v", err)
-	}
 	if err := os.Chdir(tempDir); err != nil {
 		t.Fatalf("Failed to change directory: %v", err)
 	}
-	defer os.Chdir(currentDir)
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

@@ -27,7 +27,6 @@ var (
 
 // TerrapwnerExfilDataSource is the data source implementation.
 type TerrapwnerExfilDataSource struct {
-	client *http.Client
 }
 
 // TerrapwnerExfilDataSourceModel describes the data source data model.

@@ -213,32 +213,30 @@ func (d *TerrapwnerTfstateDataSource) Read(ctx context.Context, req datasource.R
 	data.ResourceCount = types.Int64Value(int64(len(state.Values.RootModule.Resources)))
 
 	// Convert to Terraform types
-	var diags = resp.Diagnostics
-
 	typesList, diags := types.ListValueFrom(ctx, types.StringType, uniqueTypes)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.ResourceTypes = typesList
 
 	providersList, diags := types.ListValueFrom(ctx, types.StringType, uniqueProviders)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.Providers = providersList
 
 	modulesList, diags := types.ListValueFrom(ctx, types.StringType, uniqueModules)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.Modules = modulesList
 
 	outputsMap, diags := types.MapValueFrom(ctx, types.BoolType, sensitiveOutputs)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.SensitiveOutputs = outputsMap

@@ -41,7 +41,7 @@ func TestDownloadFile(t *testing.T) {
 			handler: func(w http.ResponseWriter, r *http.Request) {
 				assert.Equal(t, GetUserAgent(), r.Header.Get("User-Agent"))
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("test content"))
+				w.Write([]byte("test content")) //nolint:errcheck
 			},
 			checkFile: func(t *testing.T, path string) {
 				content, err := os.ReadFile(path)
@@ -79,7 +79,7 @@ func TestDownloadFile(t *testing.T) {
 				// Write 1MB of data
 				data := make([]byte, 1024)
 				for i := 0; i < 1024; i++ {
-					w.Write(data)
+					w.Write(data) //nolint:errcheck
 				}
 			},
 			checkFile: func(t *testing.T, path string) {
@@ -133,7 +133,7 @@ func TestDownloadFile_ContextCancellation(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(2 * time.Second)
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("test content"))
+		w.Write([]byte("test content")) //nolint:errcheck
 	}))
 	defer server.Close()
 

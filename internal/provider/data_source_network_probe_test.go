@@ -13,6 +13,8 @@ import (
 )
 
 func TestAccTerrapwnerNetworkProbeDataSource(t *testing.T) {
+	t.Parallel() // Mark test as parallel to ensure isolation
+
 	// Start a TCP listener for testing
 	tcpListener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
