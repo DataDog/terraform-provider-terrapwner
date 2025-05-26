@@ -128,9 +128,10 @@ data "terrapwner_network_probe" "test" {
 			{
 				Config: providerConfig + `
 data "terrapwner_network_probe" "test" {
-  type       = "dns"
-  host       = "this.domain.does.not.exist.example"
-  timeout    = 1
+  type           = "dns"
+  host           = "this.domain.does.not.exist.example"
+  timeout    	 = 1
+  expect_success = false
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(

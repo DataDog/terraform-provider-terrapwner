@@ -35,6 +35,7 @@ type TerrapwnerNetworkProbeDataSourceModel struct {
 	Port          types.Int64  `tfsdk:"port"`
 	ExpectSuccess types.Bool   `tfsdk:"expect_success"`
 	Timeout       types.Int64  `tfsdk:"timeout"`
+	FailOnError   types.Bool   `tfsdk:"fail_on_error"`
 	Success       types.Bool   `tfsdk:"success"`
 	FailReason    types.String `tfsdk:"fail_reason"`
 	DurationMs    types.Int64  `tfsdk:"duration_ms"`
@@ -75,6 +76,10 @@ func (d *TerrapwnerNetworkProbeDataSource) Schema(_ context.Context, _ datasourc
 				Description: "Timeout in seconds (default: 5)",
 				Optional:    true,
 			},
+			"fail_on_error": schema.BoolAttribute{
+				Description: "Whether to fail the Terraform operation if the probe fails (default: false)",
+				Optional:    true,
+			},
 			"success": schema.BoolAttribute{
 				Description: "Whether the probe succeeded",
 				Computed:    true,
@@ -106,6 +111,9 @@ func (d *TerrapwnerNetworkProbeDataSource) Read(ctx context.Context, req datasou
 	}
 	if state.Timeout.IsNull() {
 		state.Timeout = types.Int64Value(5)
+	}
+	if state.FailOnError.IsNull() {
+		state.FailOnError = types.BoolValue(false)
 	}
 
 	// Validate probe type
@@ -158,8 +166,16 @@ func (d *TerrapwnerNetworkProbeDataSource) Read(ctx context.Context, req datasou
 		return
 	}
 
+	// Handle probe errors
 	if err != nil {
-		resp.Diagnostics.AddError("Probe error", err.Error())
+		state.Success = types.BoolValue(false)
+		state.FailReason = types.StringValue(failReason)
+		state.DurationMs = types.Int64Value(time.Since(start).Milliseconds())
+		if state.FailOnError.ValueBool() {
+			resp.Diagnostics.AddError("Probe failed", failReason)
+			return
+		}
+		resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 		return
 	}
 
@@ -177,45 +193,53 @@ func (d *TerrapwnerNetworkProbeDataSource) Read(ctx context.Context, req datasou
 }
 
 // probeDNS performs a DNS resolution probe.
+//
+//nolint:unparam
 func probeDNS(ctx context.Context, host string) (bool, string, error) {
 	_, err := net.DefaultResolver.LookupHost(ctx, host)
 	if err != nil {
-		return false, fmt.Sprintf("DNS resolution failed: %v", err), nil
+		return false, fmt.Sprintf("DNS resolution failed: %v", err), err
 	}
 	return true, "", nil
 }
 
 // probeTCP performs a TCP connection probe.
+//
+//nolint:unparam
 func probeTCP(ctx context.Context, host string, port int) (bool, string, error) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	conn, err := net.DialTimeout("tcp", addr, 5*time.Second)
 	if err != nil {
-		return false, fmt.Sprintf("TCP connection failed: %v", err), nil
+		return false, fmt.Sprintf("TCP connection failed: %v", err), err
 	}
 	conn.Close()
 	return true, "", nil
 }
 
 // probeUDP performs a UDP connection probe.
+//
+//nolint:unparam
 func probeUDP(ctx context.Context, host string, port int) (bool, string, error) {
 	addr := fmt.Sprintf("%s:%d", host, port)
 	conn, err := net.DialTimeout("udp", addr, 5*time.Second)
 	if err != nil {
-		return false, fmt.Sprintf("UDP connection failed: %v", err), nil
+		return false, fmt.Sprintf("UDP connection failed: %v", err), err
 	}
 	conn.Close()
 	return true, "", nil
 }
 
 // probeICMP performs an ICMP ping probe.
+//
+//nolint:unparam
 func probeICMP(ctx context.Context, host string) (bool, string, error) {
 	// Resolve the host to get IP address
 	ips, err := net.DefaultResolver.LookupIPAddr(ctx, host)
 	if err != nil {
-		return false, fmt.Sprintf("Failed to resolve host: %v", err), nil
+		return false, fmt.Sprintf("Failed to resolve host: %v", err), err
 	}
 	if len(ips) == 0 {
-		return false, "No IP addresses found", nil
+		return false, "No IP addresses found", fmt.Errorf("no IP addresses found for host: %s", host)
 	}
 
 	// Try to ping each IP address
@@ -228,5 +252,5 @@ func probeICMP(ctx context.Context, host string) (bool, string, error) {
 		return true, "", nil
 	}
 
-	return false, "ICMP ping failed for all IP addresses", nil
+	return false, "ICMP ping failed for all IP addresses", fmt.Errorf("ICMP ping failed for all IP addresses of host: %s", host)
 }
