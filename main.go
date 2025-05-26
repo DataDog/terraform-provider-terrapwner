@@ -8,8 +8,7 @@ import (
 	"flag"
 	"log"
 
-	"terraform-provider-terrapwner/internal/provider"
-
+	"github.com/datadog/terraform-provider-terrapwner/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
 

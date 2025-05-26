@@ -11,8 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"terraform-provider-terrapwner/internal/utils"
-
+	"github.com/datadog/terraform-provider-terrapwner/internal/utils"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 

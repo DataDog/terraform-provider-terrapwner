@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"terraform-provider-terrapwner/internal/utils"
+	"github.com/datadog/terraform-provider-terrapwner/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
