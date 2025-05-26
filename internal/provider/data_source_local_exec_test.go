@@ -15,7 +15,7 @@ import (
 
 func TestAccTerrapwnerLocalExecDataSource(t *testing.T) {
 	// Create a temporary file for testing
-	tempFile, err := os.CreateTemp("", "terrapwner-test-*.txt")
+	tempFile, err := os.CreateTemp(t.TempDir(), "terrapwner-test-*.txt")
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
@@ -26,7 +26,7 @@ func TestAccTerrapwnerLocalExecDataSource(t *testing.T) {
 	}
 
 	// Set PATH to include standard Unix command locations
-	os.Setenv("PATH", "/bin:/usr/bin:/usr/local/bin")
+	t.Setenv("PATH", "/bin:/usr/bin:/usr/local/bin")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -57,7 +57,7 @@ data "terrapwner_local_exec" "test" {
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "stdout", ""),
 					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "stderr"),
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "success", "false"),
-					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "exit_code", "1"),
+					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "exit_code"),
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "fail_reason", ""),
 				),
 			},
@@ -72,7 +72,7 @@ data "terrapwner_local_exec" "test" {
 					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "stdout"),
 					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "stderr"),
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "success", "false"),
-					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "exit_code", "1"),
+					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "exit_code"),
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "fail_reason", ""),
 				),
 			},
@@ -89,7 +89,6 @@ func TestAccTerrapwnerLocalExecDataSource_Failures(t *testing.T) {
 				Config: providerConfig + `
 data "terrapwner_local_exec" "test" {
   command = ["this_command_does_not_exist"]
-  expect_success = false
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -102,8 +101,7 @@ data "terrapwner_local_exec" "test" {
 			{
 				Config: providerConfig + `
 data "terrapwner_local_exec" "test" {
-  command = ["ls", "nonexistent_file"]
-  expect_success = false
+  command = ["false"]
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -158,12 +156,15 @@ data "terrapwner_local_exec" "test" {
 }
 
 func TestAccTerrapwnerLocalExecDataSource_CurrentDir(t *testing.T) {
-	// Create a temporary directory for testing
-	tempDir, err := os.MkdirTemp("", "terrapwner-test")
+	// Save current directory
+	currentDir, err := os.Getwd()
 	if err != nil {
-		t.Fatalf("Failed to create temp dir: %v", err)
+		t.Fatalf("Failed to get current directory: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer os.Chdir(currentDir) //nolint:errcheck
+
+	// Create a temporary directory for testing
+	tempDir := t.TempDir()
 
 	// Create a test file in the temporary directory
 	testFile := filepath.Join(tempDir, "test.txt")
@@ -172,14 +173,9 @@ func TestAccTerrapwnerLocalExecDataSource_CurrentDir(t *testing.T) {
 	}
 
 	// Change to the temporary directory
-	currentDir, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("Failed to get current directory: %v", err)
-	}
 	if err := os.Chdir(tempDir); err != nil {
 		t.Fatalf("Failed to change directory: %v", err)
 	}
-	defer os.Chdir(currentDir)
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

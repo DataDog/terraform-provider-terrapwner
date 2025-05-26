@@ -17,6 +17,9 @@ import (
 )
 
 func TestAccTerrapwnerRemoteExecDataSource_InvalidURL(t *testing.T) {
+	t.Parallel()
+	_ = t.TempDir() // Create a temp dir for test isolation
+
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -39,6 +42,9 @@ data "terrapwner_remote_exec" "test" {
 }
 
 func TestAccTerrapwnerRemoteExecDataSource_FailOnError(t *testing.T) {
+	t.Parallel()
+	_ = t.TempDir() // Create a temp dir for test isolation
+
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -57,6 +63,9 @@ data "terrapwner_remote_exec" "test" {
 }
 
 func TestAccTerrapwnerRemoteExecDataSource_InvalidInterpreter(t *testing.T) {
+	t.Parallel()
+	_ = t.TempDir() // Create a temp dir for test isolation
+
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
@@ -80,11 +89,7 @@ data "terrapwner_remote_exec" "test" {
 
 func TestExecuteScript(t *testing.T) {
 	// Create a temporary directory for test scripts
-	tempDir, err := os.MkdirTemp("", "terrapwner-test")
-	if err != nil {
-		t.Fatalf("Failed to create temp dir: %v", err)
-	}
-	defer os.RemoveAll(tempDir)
+	tempDir := t.TempDir()
 
 	tests := []struct {
 		name        string

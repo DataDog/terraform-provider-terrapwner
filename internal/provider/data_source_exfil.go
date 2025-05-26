@@ -19,7 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// Ensure the implementation satisfies the expected interfaces
+// Ensure the implementation satisfies the expected interfaces.
 var (
 	_ datasource.DataSource              = &TerrapwnerExfilDataSource{}
 	_ datasource.DataSourceWithConfigure = &TerrapwnerExfilDataSource{}
@@ -27,7 +27,6 @@ var (
 
 // TerrapwnerExfilDataSource is the data source implementation.
 type TerrapwnerExfilDataSource struct {
-	client *http.Client
 }
 
 // TerrapwnerExfilDataSourceModel describes the data source data model.

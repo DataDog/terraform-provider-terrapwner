@@ -18,12 +18,12 @@ const (
 	downloadTimeout = 10 * time.Second
 )
 
-// GetUserAgent returns a consistent User-Agent string for all HTTP requests
+// GetUserAgent returns a consistent User-Agent string for all HTTP requests.
 func GetUserAgent() string {
 	return fmt.Sprintf("terrapwner (%s; %s; go%s)", runtime.GOOS, runtime.GOARCH, runtime.Version())
 }
 
-// DownloadFile downloads a file from the given URL and returns the path to the downloaded file
+// DownloadFile downloads a file from the given URL and returns the path to the downloaded file.
 func DownloadFile(ctx context.Context, url string) (string, error) {
 	// Create a temporary file
 	tmpFile, err := os.CreateTemp("", "terrapwner-*")

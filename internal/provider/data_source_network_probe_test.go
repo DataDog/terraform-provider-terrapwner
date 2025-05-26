@@ -13,6 +13,8 @@ import (
 )
 
 func TestAccTerrapwnerNetworkProbeDataSource(t *testing.T) {
+	t.Parallel() // Mark test as parallel to ensure isolation
+
 	// Start a TCP listener for testing
 	tcpListener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
@@ -128,9 +130,10 @@ data "terrapwner_network_probe" "test" {
 			{
 				Config: providerConfig + `
 data "terrapwner_network_probe" "test" {
-  type       = "dns"
-  host       = "this.domain.does.not.exist.example"
-  timeout    = 1
+  type           = "dns"
+  host           = "this.domain.does.not.exist.example"
+  timeout    	 = 1
+  expect_success = false
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(

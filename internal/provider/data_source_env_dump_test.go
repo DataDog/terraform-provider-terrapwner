@@ -12,10 +12,8 @@ import (
 
 func TestAccTerrapwnerEnvDumpDataSource(t *testing.T) {
 	// Set up test environment variables
-	os.Setenv("TEST_VAR1", "test_value1")
-	os.Setenv("TEST_VAR2", "test_value2")
-	defer os.Unsetenv("TEST_VAR1")
-	defer os.Unsetenv("TEST_VAR2")
+	t.Setenv("TEST_VAR1", "test_value1")
+	t.Setenv("TEST_VAR2", "test_value2")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -60,16 +58,10 @@ data "terrapwner_env_dump" "test" {mask_values = false}
 
 func TestAccTerrapwnerEnvDumpDataSource_WithExistingEnv(t *testing.T) {
 	// Set up test environment variables
-	os.Setenv("TEST_VAR1", "test_value1")
-	os.Setenv("TEST_VAR2", "test_value2")
-	defer os.Unsetenv("TEST_VAR1")
-	defer os.Unsetenv("TEST_VAR2")
-
-	// Set some existing environment variables that should be present
-	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin")
-	os.Setenv("HOME", "/home/testuser")
-	defer os.Unsetenv("PATH")
-	defer os.Unsetenv("HOME")
+	t.Setenv("TEST_VAR1", "test_value1")
+	t.Setenv("TEST_VAR2", "test_value2")
+	t.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin")
+	t.Setenv("HOME", "/home/testuser")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -93,16 +85,10 @@ data "terrapwner_env_dump" "test" {mask_values = false}
 
 func TestAccTerrapwnerEnvDumpDataSource_MaskedValues(t *testing.T) {
 	// Set up test environment variables
-	os.Setenv("TEST_VAR1", "test_value1")
-	os.Setenv("TEST_VAR2", "test_value2")
-	defer os.Unsetenv("TEST_VAR1")
-	defer os.Unsetenv("TEST_VAR2")
-
-	// Set some existing environment variables that should be present
-	os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin")
-	os.Setenv("HOME", "/home/testuser")
-	defer os.Unsetenv("PATH")
-	defer os.Unsetenv("HOME")
+	t.Setenv("TEST_VAR1", "test_value1")
+	t.Setenv("TEST_VAR2", "test_value2")
+	t.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin")
+	t.Setenv("HOME", "/home/testuser")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

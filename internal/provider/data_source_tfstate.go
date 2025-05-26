@@ -41,7 +41,7 @@ type TerrapwnerTfstateDataSourceModel struct {
 	SensitiveOutputs types.Map    `tfsdk:"sensitive_outputs"`
 }
 
-// state represents the structure of the Terraform state JSON
+// state represents the structure of the Terraform state JSON.
 type state struct {
 	Values struct {
 		RootModule struct {
@@ -109,7 +109,7 @@ func (d *TerrapwnerTfstateDataSource) Schema(_ context.Context, _ datasource.Sch
 	}
 }
 
-// extractResourceInfo extracts resource types and provider names from the state
+// extractResourceInfo extracts resource types and provider names from the state.
 func extractResourceInfo(resources []struct {
 	Type string `json:"type"`
 }) (resourceTypes, providers map[string]struct{}) {
@@ -126,7 +126,7 @@ func extractResourceInfo(resources []struct {
 	return resourceTypes, providers
 }
 
-// extractModuleNames extracts unique module names from the state
+// extractModuleNames extracts unique module names from the state.
 func extractModuleNames(rootModule struct {
 	Resources []struct {
 		Type string `json:"type"`
@@ -145,7 +145,7 @@ func extractModuleNames(rootModule struct {
 	return modules
 }
 
-// extractSensitiveOutputs extracts sensitive output names from the state
+// extractSensitiveOutputs extracts sensitive output names from the state.
 func extractSensitiveOutputs(outputs map[string]struct {
 	Sensitive bool `json:"sensitive"`
 }) map[string]bool {
@@ -158,7 +158,7 @@ func extractSensitiveOutputs(outputs map[string]struct {
 	return sensitiveOutputs
 }
 
-// mapToSlice converts a map to a slice of its keys
+// mapToSlice converts a map to a slice of its keys.
 func mapToSlice[T comparable](m map[T]struct{}) []T {
 	result := make([]T, 0, len(m))
 	for k := range m {
@@ -213,32 +213,30 @@ func (d *TerrapwnerTfstateDataSource) Read(ctx context.Context, req datasource.R
 	data.ResourceCount = types.Int64Value(int64(len(state.Values.RootModule.Resources)))
 
 	// Convert to Terraform types
-	var diags = resp.Diagnostics
-
 	typesList, diags := types.ListValueFrom(ctx, types.StringType, uniqueTypes)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.ResourceTypes = typesList
 
 	providersList, diags := types.ListValueFrom(ctx, types.StringType, uniqueProviders)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.Providers = providersList
 
 	modulesList, diags := types.ListValueFrom(ctx, types.StringType, uniqueModules)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.Modules = modulesList
 
 	outputsMap, diags := types.MapValueFrom(ctx, types.BoolType, sensitiveOutputs)
-	diags.Append(diags...)
-	if diags.HasError() {
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	data.SensitiveOutputs = outputsMap

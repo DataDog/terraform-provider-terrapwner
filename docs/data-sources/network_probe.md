@@ -85,6 +85,7 @@ output "icmp_response" {
 ### Optional
 
 - `expect_success` (Boolean) Whether the probe is expected to succeed (default: true)
+- `fail_on_error` (Boolean) Whether to fail the Terraform operation if the probe fails (default: false)
 - `port` (Number) Port to probe (required for tcp/udp probes, ignored for dns/icmp)
 - `timeout` (Number) Timeout in seconds (default: 5)
 

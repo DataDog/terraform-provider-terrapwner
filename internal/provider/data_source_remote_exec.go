@@ -99,7 +99,7 @@ func (d *TerrapwnerRemoteExecDataSource) Schema(_ context.Context, _ datasource.
 	}
 }
 
-// downloadScript downloads a script from the given URL, makes it executable, and returns the path
+// downloadScript downloads a script from the given URL, makes it executable, and returns the path.
 func downloadScript(ctx context.Context, url string) (string, error) {
 	// Download the script using the generic download function
 	scriptPath, err := utils.DownloadFile(ctx, url)
@@ -115,7 +115,7 @@ func downloadScript(ctx context.Context, url string) (string, error) {
 	return scriptPath, nil
 }
 
-// executeScript executes a script with the given interpreter and arguments
+// executeScript executes a script with the given interpreter and arguments.
 func executeScript(ctx context.Context, scriptPath string, interpreter string, args []string) (*utils.ExecResult, error) {
 	// Execute the script with the interpreter using utils package
 	result, err := utils.Execute(ctx, interpreter, append([]string{scriptPath}, args...), 30*time.Second)
