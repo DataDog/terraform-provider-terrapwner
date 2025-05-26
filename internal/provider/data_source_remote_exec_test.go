@@ -80,11 +80,7 @@ data "terrapwner_remote_exec" "test" {
 
 func TestExecuteScript(t *testing.T) {
 	// Create a temporary directory for test scripts
-	tempDir, err := os.MkdirTemp("", "terrapwner-test")
-	if err != nil {
-		t.Fatalf("Failed to create temp dir: %v", err)
-	}
-	defer os.RemoveAll(tempDir)
+	tempDir := t.TempDir()
 
 	tests := []struct {
 		name        string

@@ -15,7 +15,7 @@ import (
 
 func TestAccTerrapwnerLocalExecDataSource(t *testing.T) {
 	// Create a temporary file for testing
-	tempFile, err := os.CreateTemp("", "terrapwner-test-*.txt")
+	tempFile, err := os.CreateTemp(t.TempDir(), "terrapwner-test-*.txt")
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
@@ -26,7 +26,7 @@ func TestAccTerrapwnerLocalExecDataSource(t *testing.T) {
 	}
 
 	// Set PATH to include standard Unix command locations
-	os.Setenv("PATH", "/bin:/usr/bin:/usr/local/bin")
+	t.Setenv("PATH", "/bin:/usr/bin:/usr/local/bin")
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -89,7 +89,6 @@ func TestAccTerrapwnerLocalExecDataSource_Failures(t *testing.T) {
 				Config: providerConfig + `
 data "terrapwner_local_exec" "test" {
   command = ["this_command_does_not_exist"]
-  expect_success = false
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -102,8 +101,7 @@ data "terrapwner_local_exec" "test" {
 			{
 				Config: providerConfig + `
 data "terrapwner_local_exec" "test" {
-  command = ["ls", "nonexistent_file"]
-  expect_success = false
+  command = ["false"]
 }
 `,
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -159,11 +157,7 @@ data "terrapwner_local_exec" "test" {
 
 func TestAccTerrapwnerLocalExecDataSource_CurrentDir(t *testing.T) {
 	// Create a temporary directory for testing
-	tempDir, err := os.MkdirTemp("", "terrapwner-test")
-	if err != nil {
-		t.Fatalf("Failed to create temp dir: %v", err)
-	}
-	defer os.RemoveAll(tempDir)
+	tempDir := t.TempDir()
 
 	// Create a test file in the temporary directory
 	testFile := filepath.Join(tempDir, "test.txt")
