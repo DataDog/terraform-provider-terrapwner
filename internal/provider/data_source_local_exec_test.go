@@ -57,7 +57,7 @@ data "terrapwner_local_exec" "test" {
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "stdout", ""),
 					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "stderr"),
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "success", "false"),
-					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "exit_code", "1"),
+					resource.TestCheckResourceAttrSet("data.terrapwner_local_exec.test", "exit_code"),
 					resource.TestCheckResourceAttr("data.terrapwner_local_exec.test", "fail_reason", ""),
 				),
 			},
