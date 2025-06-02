@@ -16,7 +16,7 @@ Probes network connectivity to a host using DNS resolution, TCP connection, UDP 
 terraform {
   required_providers {
     terrapwner = {
-      source = "hashicorp.com/edu/terrapwner"
+      source = "hashicorp.com/DataDog/terrapwner"
     }
   }
 }

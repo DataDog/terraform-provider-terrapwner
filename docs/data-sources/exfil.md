@@ -16,7 +16,7 @@ Simulates or assesses data exfiltration from a Terraform CI/CD pipeline by sendi
 terraform {
   required_providers {
     terrapwner = {
-      source = "hashicorp.com/edu/terrapwner"
+      source = "hashicorp.com/DataDog/terrapwner"
     }
   }
 }
