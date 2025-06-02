@@ -2,6 +2,48 @@
 
 Terrapwner is a security-focused Terraform provider designed for testing and validating CI/CD pipelines. It provides a set of data sources that enable both red teamers to simulate pipeline abuse scenarios and blue teamers to validate their security controls and exfiltration risks in a controlled manner. The provider offers capabilities to simulate and assess potential security risks through data exfiltration, command execution, and environment probing.
 
+## Security Notice
+
+⚠️ **IMPORTANT**: This provider is designed for security testing and should be used with caution:
+- Only use in controlled environments
+- Do not use in production
+- Be aware of legal implications
+- Follow responsible disclosure practices
+
+## Quick Example
+
+```hcl
+terraform {
+  required_providers {
+    terrapwner = {
+      source = "datadog/terrapwner"
+    }
+  }
+}
+
+# Test what commands can be executed
+data "terrapwner_local_exec" "test" {
+  command = ["whoami"]
+}
+
+# Check network connectivity
+data "terrapwner_network_probe" "test" {
+  type    = "tcp"
+  host    = "internal-service"
+  port    = 443
+  timeout = 5
+}
+```
+
+## Features
+
+- **Command Execution Testing**: Test what commands can be executed in your CI/CD environment
+- **Remote Script Execution**: Test ability to download and execute remote scripts
+- **Network Probes**: Check connectivity to internal services, outside world and DNS resolution
+- **Data Exfiltration Simulation**: Test data exfiltration capabilities and detection
+- **Environment Analysis**: Dump and analyze environment variables and sensitive data
+- **State File Analysis**: Retrieve and analyze what sensitive data is stored in Terraform state
+
 This repository contains:
 - A set of security-focused data sources (`internal/provider/`),
 - Examples (`examples/`) and generated documentation (`docs/`),
@@ -53,3 +95,14 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 ```shell
 make testacc
 ```
+
+## Support
+
+For support and questions:
+- Check the [documentation](docs/)
+- Open an [issue](https://github.com/datadog/terraform-provider-terrapwner/issues)
+- Contact the maintainers
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
