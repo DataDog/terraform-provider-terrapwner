@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     terrapwner = {
-      source = "hashicorp.com/edu/terrapwner"
+      source = "hashicorp.com/DataDog/terrapwner"
     }
   }
 }
