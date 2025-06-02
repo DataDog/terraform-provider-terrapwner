@@ -16,7 +16,7 @@ Terrapwner is a Terraform provider designed for security testing and validation 
 terraform {
   required_providers {
     terrapwner = {
-      source = "hashicorp.com/edu/terrapwner"
+      source = "hashicorp.com/DataDog/terrapwner"
     }
   }
 }

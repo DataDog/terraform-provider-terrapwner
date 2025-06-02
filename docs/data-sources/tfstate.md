@@ -16,7 +16,7 @@ Reads and leaks the Terraform state using 'terraform show -json'.
 terraform {
   required_providers {
     terrapwner = {
-      source = "hashicorp.com/edu/terrapwner"
+      source = "hashicorp.com/DataDog/terrapwner"
     }
     local = {
       source = "hashicorp/local"

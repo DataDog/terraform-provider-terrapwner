@@ -16,7 +16,7 @@ Executes a local command and captures its output, exit code, and runtime details
 terraform {
   required_providers {
     terrapwner = {
-      source = "hashicorp.com/edu/terrapwner"
+      source = "hashicorp.com/DataDog/terrapwner"
     }
   }
 }
