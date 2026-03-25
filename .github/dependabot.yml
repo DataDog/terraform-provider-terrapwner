@@ -1,0 +1,22 @@
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: /
+  schedule:
+    interval: daily
+  cooldown:
+    default-days: 14
+- package-ecosystem: gomod
+  directory: /tools
+  schedule:
+    interval: daily
+  cooldown:
+    default-days: 14
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: daily
+  allow:
+  - dependency-name: hashicorp/*
+  cooldown:
+    default-days: 14
