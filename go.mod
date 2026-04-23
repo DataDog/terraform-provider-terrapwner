@@ -1,6 +1,6 @@
 module github.com/datadog/terraform-provider-terrapwner
 
-go 1.23.7
+go 1.25.0
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.37.0
@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.35.0
 	github.com/hashicorp/terraform-plugin-framework v1.15.1
 	github.com/hashicorp/terraform-plugin-go v0.28.0
-	github.com/hashicorp/terraform-plugin-log v0.9.0
+	github.com/hashicorp/terraform-plugin-log v0.10.0
 	github.com/hashicorp/terraform-plugin-testing v1.13.2
 	github.com/stretchr/testify v1.10.0
 )
@@ -29,7 +29,7 @@ require (
 	github.com/aws/smithy-go v1.22.5 // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.16.0 // indirect
+	github.com/fatih/color v1.19.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -52,7 +52,7 @@ require (
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
@@ -70,7 +70,7 @@ require (
 	golang.org/x/mod v0.25.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
 	golang.org/x/tools v0.33.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
